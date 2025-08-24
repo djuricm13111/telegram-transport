@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+.build/
+dist/
+.python-version
+
+# Virtualenv
+venv/
+.envrc
+
+# Local config / secrets
+.env
+*.local
+*.secret
+
+# SQLite DB (lokalni podaci, ne guraj u git)
+ledger.db
+*.sqlite
+*.sqlite3
+*.db
+
+# OS / Editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
