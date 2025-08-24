@@ -1,0 +1,7 @@
+services:
+  bot:
+    build: .
+    env_file: .env # TELEGRAM_TOKEN=...
+    volumes:
+      - ./ledger.db:/app/ledger.db
+    restart: unless-stopped
