@@ -1,14 +1,15 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackQueryHandler, ContextTypes
-from ..services.pairs import get_pair_by_user, user_belongs, other_of
+from ..services.pairs import get_active_pair, user_belongs, other_of
 from ..services.reset_srv import create_reset_request, get_pending_by_token, clear_pending, clear_all_tx
 from .core import notify_both
 
 async def reset_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     uid = update.effective_user.id
-    pair = get_pair_by_user(uid)
+    # ⬇️ koristi aktivni par
+    pair = get_active_pair(uid)
     if not pair:
-        return await update.message.reply_text("❗ Prvo uparite naloge: /link → /join")
+        return await update.message.reply_text("❗ Nema aktivnog para. /parovi → izaberi par ili /use <pair_id>")
 
     token = create_reset_request(pair["pair_id"], uid)
     other = other_of(pair, uid)
@@ -19,6 +20,7 @@ async def reset_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("✖️ Odbij",          callback_data=f"reset_cancel:{token}")]
         ]
     )
+    # dugmad šaljemo SAMO drugom korisniku u tom paru
     await ctx.bot.send_message(other, "⚠️ Zatražen je reset fonda na 0. Potvrdi ili odbij:", reply_markup=kb)
     await update.message.reply_text("✅ Tvoj zahtev je poslat. Čeka se reakcija drugog korisnika.")
 
